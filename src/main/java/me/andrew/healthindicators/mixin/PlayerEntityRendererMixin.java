@@ -11,9 +11,8 @@ import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -53,7 +52,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             BufferBuilder vertexConsumer = tessellator.getBuffer();
 
             vertexConsumer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderTexture(0, DrawableHelper.GUI_ICONS_TEXTURE);
             RenderSystem.enableDepthTest();
 
@@ -72,7 +71,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
             int pixelsTotal = heartsTotal * 8 + 1;
             float maxX = pixelsTotal / 2.0f;
-            for (int heart = 0; heart < heartsTotal; heart++){
+            for (int heart = 0; heart < heartsTotal; heart++) {
                 float x = maxX - heart * 8;
                 drawHeart(model, vertexConsumer, x, 0);
                 // Offset in the gui icons texture in hearts
@@ -85,7 +84,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                     type = 0;
                 } else {
                     type = 8 * 2;
-                    if(heart == heartsTotal - 1 && lastYellowHalf) type += 1;
+                    if (heart == heartsTotal - 1 && lastYellowHalf) type += 1;
                 }
                 if (type != 0) {
                     drawHeart(model, vertexConsumer, x, type);
@@ -98,7 +97,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         }
     }
 
-    private static void drawHeart(Matrix4f model, VertexConsumer vertexConsumer, float x, int type){
+    private static void drawHeart(Matrix4f model, VertexConsumer vertexConsumer, float x, int type) {
         float minU = 16F / 256F + type * 9F / 256F;
         float maxU = minU + 9F / 256F;
         float minV = 0;
